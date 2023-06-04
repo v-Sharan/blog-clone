@@ -1,28 +1,32 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Button } from "react-native";
+import { StyleSheet, View, Button } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import axios from "axios";
 
+import { EXPO_CLIENT_ID, ANDROID_CLIENT_ID, WEB_CLIENT_ID } from "@env";
+import { useRouter } from "expo-router";
+
+import { useAuth } from "../context/auth";
+
 WebBrowser.maybeCompleteAuthSession();
 
 export default function App() {
-  const [token, setToken] = useState("");
-  const [userInfo, setUserInfo] = useState(null);
+  const [token, setToken] = useState(null);
+  const { user, token: jwtToken, setUserFunc, setTokenFunc } = useAuth();
+
+  const router = useRouter();
 
   const [request, response, promptAsync] = Google.useAuthRequest({
-    expoClientId:
-      "773235941412-104mhg0dl8trk4gku54k476mro0pl56f.apps.googleusercontent.com",
-    androidClientId:
-      "773235941412-2jkmtfhkjdj055l1f7jttt63o1cmgjh4.apps.googleusercontent.com",
-    webClientId:
-      "773235941412-s2t6us08h7p4pk2cc2s8n06qcsm1vu6r.apps.googleusercontent.com",
+    expoClientId: EXPO_CLIENT_ID,
+    androidClientId: ANDROID_CLIENT_ID,
+    webClientId: WEB_CLIENT_ID,
   });
 
   useEffect(() => {
     if (response?.type === "success") {
-      console.log(response.authentication.accessToken);
       setToken(response.authentication.accessToken);
+      console.log(response.authentication.accessToken);
       if (token) {
         getUserInfo();
       }
@@ -38,15 +42,20 @@ export default function App() {
 
       const user = response.data;
       console.log(user);
-      setUserInfo(user.user);
+      setUserFunc(user.user);
+      setTokenFunc(user.jwtToken);
     } catch (error) {
       console.log(error);
     }
   };
 
+  if (user && jwtToken) {
+    router.push("/home");
+  }
+
   return (
     <View style={styles.container}>
-      {userInfo === null ? (
+      {user === null && (
         <Button
           title="Sign in with Google"
           disabled={!request}
@@ -54,8 +63,6 @@ export default function App() {
             promptAsync();
           }}
         />
-      ) : (
-        <Text style={styles.text}>{userInfo.username}</Text>
       )}
     </View>
   );

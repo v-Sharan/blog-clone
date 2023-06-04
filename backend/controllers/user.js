@@ -43,31 +43,30 @@ export const createUser = async (req, res, next) => {
     try {
       existingUser = await User.findOne({ email: email });
     } catch (err) {
+      console.log(err);
       const error = new HttpError(
         "Signing up failed, please again later.",
         500
       );
       return next(error);
     }
-
     if (existingUser) {
       res.json({ user: existingUser, jwtToken });
+    } else {
+      const createdUser = new User({
+        username: name,
+        email,
+        userPhoto: picture,
+        blogs: [],
+      });
+      try {
+        await createdUser.save();
+        res.json({ user: createdUser, jwtToken });
+      } catch (err) {
+        const error = new HttpError("Signing in faild, try again later", 201);
+        return next(error);
+      }
     }
-
-    const createdUser = new User({
-      username: name,
-      email,
-      userPhoto: picture,
-      blogs: [],
-    });
-
-    try {
-      await createdUser.save();
-    } catch (err) {
-      const error = new HttpError("Signing in faild, try again later", 201);
-      return next(error);
-    }
-    res.json({ user: createdUser, jwtToken });
   } catch (error) {
     return next(new HttpError(error, 422));
   }
