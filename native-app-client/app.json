@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "scheme": "acme",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "web": {
+      "bundler": "metro"
+    },
+    "name": "native-app-client",
+    "slug": "native-app-client",
+    "android": {
+      "package": "com.sago_sharan.nativeappclient"
+    }
+  }
+}
