@@ -1,59 +1,52 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, View, Button } from "react-native";
+import { StyleSheet, Text, View, Button } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
-import axios from "axios";
-
-import { EXPO_CLIENT_ID, ANDROID_CLIENT_ID, WEB_CLIENT_ID } from "@env";
-import { useRouter } from "expo-router";
-
-import { useAuth } from "../context/auth";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function App() {
-  const [token, setToken] = useState(null);
-  const { user, token: jwtToken, setUserFunc, setTokenFunc } = useAuth();
-
-  const router = useRouter();
+  const [token, setToken] = useState("");
+  const [userInfo, setUserInfo] = useState(null);
 
   const [request, response, promptAsync] = Google.useAuthRequest({
-    expoClientId: EXPO_CLIENT_ID,
-    androidClientId: ANDROID_CLIENT_ID,
-    webClientId: WEB_CLIENT_ID,
+    webClientId:
+      "866660091623-kk8i66cufcv1t3tcccittgh3feo1akgd.apps.googleusercontent.com",
+    expoClientId:
+      "866660091623-1gh74uqe9blsn73fefojjqvc05nou6p8.apps.googleusercontent.com",
+    androidClientId:
+      "866660091623-ddr0n6qpt73u7paqp7ob8jtaesi7q4cp.apps.googleusercontent.com",
+    iosClientId:
+      "866660091623-6g28hk9oiom1o3eo5muv14l9gp2cqjjl.apps.googleusercontent.com",
   });
 
   useEffect(() => {
     if (response?.type === "success") {
       setToken(response.authentication.accessToken);
-      if (token) {
-        getUserInfo();
-      }
+      getUserInfo();
     }
   }, [response, token]);
 
   const getUserInfo = async () => {
     try {
-      const response = await axios.post(
-        "http://192.168.185.177:8080/user/auth/signup",
-        { token }
+      const response = await fetch(
+        "https://www.googleapis.com/userinfo/v2/me",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
 
-      const user = response.data;
-      setUserFunc(user.user._id);
-      setTokenFunc(user.jwtToken);
+      const user = await response.json();
+      setUserInfo(user);
+      console.log(user);
     } catch (error) {
-      console.log(error.response.data);
+      console.warn(error);
     }
   };
 
-  if (user && jwtToken) {
-    router.push("/home");
-  }
-
   return (
     <View style={styles.container}>
-      {user === null && (
+      {userInfo === null ? (
         <Button
           title="Sign in with Google"
           disabled={!request}
@@ -61,6 +54,8 @@ export default function App() {
             promptAsync();
           }}
         />
+      ) : (
+        <Text style={styles.text}>{userInfo.name}</Text>
       )}
     </View>
   );
