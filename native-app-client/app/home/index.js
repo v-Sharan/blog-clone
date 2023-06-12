@@ -1,16 +1,18 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
+
 import { useAuth } from "../../context/auth";
 
-const index = () => {
-  const ctx = useAuth();
-  console.log(ctx);
-
+const Page = () => {
+  const { logOutFunc } = useAuth();
   return (
     <View>
-      <Text>index</Text>
+      <Text>Page</Text>
+      <TouchableOpacity onPress={() => logOutFunc()}>
+        <Text>Logout</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
-export default index;
+export default Page;

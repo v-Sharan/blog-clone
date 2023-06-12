@@ -18,11 +18,12 @@ app.use(bodyParser.json());
 app.use(cors(corsOptions));
 app.use(express.json());
 
-// app.use((error, res) => {
-//   const status = error.status || 500;
-//   const message = error.message || "Something went wrong.";
-//   res.status(status).json({ message: message });
-// });
+app.use((error, req, res, next) => {
+  console.log(res.headerSent);
+  const status = error.status || 500;
+  const message = error.message || "Something went wrong.";
+  res.status(status).json({ message: message });
+});
 
 app.use("/user/auth", UserRoutes);
 app.use("/post/blogs", BlogRoutes);

@@ -61,6 +61,7 @@ export const createUser = async (req, res, next) => {
       });
       try {
         await createdUser.save();
+        console.log("user created");
         res.json({ user: createdUser, jwtToken });
       } catch (err) {
         const error = new HttpError("Signing in faild, try again later", 201);

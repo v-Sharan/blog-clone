@@ -26,7 +26,6 @@ export default function App() {
   useEffect(() => {
     if (response?.type === "success") {
       setToken(response.authentication.accessToken);
-      console.log(response.authentication.accessToken);
       if (token) {
         getUserInfo();
       }
@@ -36,16 +35,15 @@ export default function App() {
   const getUserInfo = async () => {
     try {
       const response = await axios.post(
-        "http://10.0.21.113:8080/user/auth/signup",
+        "http://192.168.185.177:8080/user/auth/signup",
         { token }
       );
 
       const user = response.data;
-      console.log(user);
-      setUserFunc(user.user);
+      setUserFunc(user.user._id);
       setTokenFunc(user.jwtToken);
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data);
     }
   };
 
