@@ -14,6 +14,10 @@ const UserSchema = new Schema(
       required: [true, "Email id is required"],
       unique: [true, "Email already exists"],
     },
+    password: {
+      type: String,
+      required: [true, "Password id is required"],
+    },
     userPhoto: {
       type: String,
       required: [true, "Profile photo is required"],

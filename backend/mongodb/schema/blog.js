@@ -5,16 +5,15 @@ const Schema = mongoose.Schema;
 const BlogSchema = new Schema(
   {
     creator: { type: mongoose.Types.ObjectId, required: true, ref: "User" },
-    username: { type: String, required: [true, "User Name is important"] },
-    userPhoto: {
-      type: String,
-      required: [true, "Profile photo is required"],
-    },
+    // image: {
+    //   type: String,
+    //   required: [true, "Image is required for reference"],
+    // },
     discription: { type: String, required: [true, "Discriptionis required"] },
     comments: [
       { type: mongoose.Types.ObjectId, required: true, ref: "Comment" },
     ],
-    tags: [{ type: String, required: [true, "tag is required"] }],
+    // tags: [{ type: String, required: [true, "tag is required"] }],
   },
   { timestamps: true }
 );

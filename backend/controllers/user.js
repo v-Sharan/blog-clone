@@ -5,7 +5,7 @@ import { User } from "../mongodb/schema/user.js";
 import { getUserDeatils } from "../utils/getUserDetails.js";
 import { HttpError } from "../utils/HttpError.js";
 
-export const createUser = async (req, res, next) => {
+export const createUserByGoogle = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return next(
@@ -30,14 +30,6 @@ export const createUser = async (req, res, next) => {
     if (!picture.startsWith("http")) {
       return next(new HttpError("Check your photo link", 422));
     }
-    const jwtToken = jwt.sign(
-      {
-        email,
-        name,
-      },
-      process.env.SECRET,
-      { expiresIn: "90h" }
-    );
     let existingUser;
 
     try {
@@ -59,10 +51,63 @@ export const createUser = async (req, res, next) => {
         userPhoto: picture,
         blogs: [],
       });
+      console.log("user created");
       try {
         await createdUser.save();
         console.log("user created");
-        res.json({ user: createdUser, jwtToken });
+        res.json({ user: createdUser });
+      } catch (err) {
+        const error = new HttpError("Signing in faild, try again later", 201);
+        return next(error);
+      }
+    }
+  } catch (error) {
+    return next(new HttpError(error, 422));
+  }
+};
+
+export const createUser = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError("Invalid inputs passed, please check your data.", 422)
+    );
+  }
+
+  const { username, email, password } = req.body;
+
+  try {
+    let existingUser;
+
+    try {
+      existingUser = await User.findOne({ email: email });
+    } catch (err) {
+      console.log(err);
+      const error = new HttpError(
+        "Signing up failed, please again later.",
+        500
+      );
+      return next(error);
+    }
+    if (existingUser) {
+      const error = new HttpError(
+        "user Already exist, insted of signin,click login",
+        201
+      );
+      return next(error);
+    } else {
+      const createdUser = new User({
+        username,
+        email,
+        password,
+        userPhoto:
+          "https://res.cloudinary.com/dfje97i0k/image/upload/v1686723552/personimg_o7xaah.jpg",
+        blogs: [],
+      });
+      try {
+        await createdUser.save();
+        console.log("user created");
+        res.json({ message: "Registered sucessfully" });
       } catch (err) {
         const error = new HttpError("Signing in faild, try again later", 201);
         return next(error);
@@ -95,15 +140,43 @@ export const getUserByID = async (req, res, next) => {
       )
     );
   }
+  res.json({ user: existingUser });
+};
 
-  const jwtToken = jwt.sign(
-    {
-      email,
-      name,
-    },
-    process.env.SECRET,
-    { expiresIn: "90h" }
-  );
+export const login = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError("Invalid inputs passed, please check your data.", 422)
+    );
+  }
+  const { email, password } = req.body;
+  let user;
+  try {
+    user = await User.findOne({ email: email });
+  } catch (err) {
+    const error = new HttpError("Log in failed, please try again later.", 500);
+    return next(error);
+  }
+  const jwtToken = jwt.sign({ email }, process.env.SECRET, {
+    expiresIn: "90h",
+  });
 
-  res.json({ user: existingUser, jwtToken });
+  if (!user) {
+    const error = new HttpError(
+      "User does't exist,Please sign in first (or) Credentials seems to be wrong",
+      402
+    );
+    return next(error);
+  }
+  if (user.email === email && user.password === password) {
+    const userLoged = {
+      id: user._id,
+      userPhoto: user.userPhoto,
+      userName: user.username,
+    };
+    res.json({ user: userLoged, jwtToken });
+  } else {
+    return next(new HttpError("Credentials seems to be wrong", 500));
+  }
 };

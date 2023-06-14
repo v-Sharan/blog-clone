@@ -10,23 +10,19 @@ import BlogRoutes from "./routes/blog.js";
 dotenv.config();
 
 const app = express();
-const corsOptions = {
-  origin: "*",
-  credentials: true, //access-control-allow-credentials:true
-};
+
 app.use(bodyParser.json());
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(express.json());
 
+app.use("/user/auth", UserRoutes);
+app.use("/post", BlogRoutes);
+
 app.use((error, req, res, next) => {
-  console.log(res.headerSent);
   const status = error.status || 500;
   const message = error.message || "Something went wrong.";
   res.status(status).json({ message: message });
 });
-
-app.use("/user/auth", UserRoutes);
-app.use("/post/blogs", BlogRoutes);
 
 const startServer = () => {
   try {
