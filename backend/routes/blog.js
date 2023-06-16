@@ -8,7 +8,6 @@ import {
 } from "../controllers/blog.js";
 
 import { checkToken } from "../middleware/CheckJwtToken.js";
-import { fileUpload } from "../middleware/fileUpload.js";
 
 const router = Router();
 
@@ -16,16 +15,17 @@ const router = Router();
 
 router.post(
   "/blog",
-  // fileUpload.single("image"),
   [
     check("creator").not().isEmpty(),
     // check("tag").not().isEmpty(),
     check("discription").not().isEmpty(),
+    check("title").not().isEmpty(),
+    check("image").not().isEmpty(),
   ],
   createBlog
 );
 
-router.get("/blog/:userId", getBlogByUserId);
+router.get("/blogByUser/:userId", getBlogByUserId);
 router.get("/", getAllBlog);
 
 router.get("/blog/:blogId", getBlogById);

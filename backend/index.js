@@ -16,7 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/user/auth", UserRoutes);
-app.use("/post", BlogRoutes);
+app.use("/postBlog", BlogRoutes);
 
 app.use((error, req, res, next) => {
   const status = error.status || 500;
