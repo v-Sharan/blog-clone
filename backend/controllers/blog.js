@@ -27,6 +27,7 @@ export const createBlog = async (req, res, next) => {
   }
 
   const splitPath = req.file.path.split("\\");
+  console.log(splitPath);
 
   try {
     createdBlog = new Blog({
@@ -34,7 +35,7 @@ export const createBlog = async (req, res, next) => {
       topic,
       discription,
       comments: [],
-      image: splitPath[0] + "/" + splitPath[1],
+      image: splitPath[0] + "/" + splitPath[1] + "/" + splitPath[2],
     });
   } catch (error) {
     console.log(error);
@@ -54,12 +55,12 @@ export const createBlog = async (req, res, next) => {
     );
     return next(error);
   }
+  console.log("post created");
   res.status(201).json({ message: "Blog Posted" });
 };
 
 export const getBlogById = async (req, res, next) => {
   const { blogId } = req.params;
-  console.log(blogId);
   const blogs = await Blog.findById(blogId).populate(
     "creator",
     "-blogs -password"

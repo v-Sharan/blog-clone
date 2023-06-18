@@ -5,6 +5,7 @@ import ProfileScreen from "./profileScreen";
 import SettingScreen from "./settingsScreen";
 import AddBolgScreen from "./AddBlogScreen";
 import SearchScreen from "./searchScreen";
+import SingleBlogScreen from "./dynamicScreens/SingleBlogScreen";
 
 export {
   HomeScreen,
@@ -14,4 +15,5 @@ export {
   SettingScreen,
   AddBolgScreen,
   SearchScreen,
+  SingleBlogScreen,
 };

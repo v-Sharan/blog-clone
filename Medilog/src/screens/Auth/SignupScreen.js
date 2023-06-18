@@ -30,7 +30,7 @@ const SignUpScreen = () => {
   const onSignInPressed = async (data) => {
     setLoading(true);
     axios
-      .post("http:192.168.185.177:8080/user/signup", data)
+      .post("http:192.168.160.177:8080/user/signup", data)
       .then((res) => {
         ToastAndroid.show("Register Successfully", ToastAndroid.SHORT);
         // setTimeout(() => {

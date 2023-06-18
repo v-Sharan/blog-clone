@@ -1,7 +1,6 @@
 import "react-native-gesture-handler";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createDrawerNavigator } from "@react-navigation/drawer";
 import { useAuth } from "../context/auth";
 
 import {
@@ -11,7 +10,7 @@ import {
   AddBolgScreen,
   ProfileScreen,
   SettingScreen,
-  SearchScreen,
+  SingleBlogScreen,
 } from "./screens";
 import { Image, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -21,17 +20,17 @@ const Tab = createBottomTabNavigator();
 function Tabs({ navigation }) {
   const { user } = useAuth();
   return (
-    <Tab.Navigator>
+    <Tab.Navigator screenOptions={{ tabBarShowLabel: false }}>
       <Tab.Screen
-        name="Tab"
+        name="Home"
         component={HomeScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" size={size} color={color} />
           ),
-          headerRight: () => (
+          headerLeft: () => (
             <TouchableOpacity
-              style={{ paddingRight: 4 }}
+              style={{ paddingLeft: 10 }}
               onPress={() => navigation.navigate("Profile")}
             >
               <Image
@@ -40,31 +39,18 @@ function Tabs({ navigation }) {
               />
             </TouchableOpacity>
           ),
-          headerLeft: () => (
-            <TouchableOpacity
-              style={{
-                marginLeft: 5,
-                backgroundColor: "#DDD",
-                padding: 5,
-                borderRadius: 10,
-              }}
-              onPress={() => navigation.openDrawer()}
-            >
-              <Ionicons name="ios-menu-sharp" size={30} color="black" />
-            </TouchableOpacity>
+          headerRight: () => (
+            <Ionicons
+              name="notifications-outline"
+              size={30}
+              color="black"
+              style={{ paddingRight: 10 }}
+            />
           ),
-          title: "",
+          title: `Welcome ${user?.userName}!`,
         }}
       />
-      <Tab.Screen
-        name="Search"
-        component={SearchScreen}
-        options={{
-          tabBarIcon: ({ size, color }) => (
-            <Ionicons name="search-sharp" size={size} color={color} />
-          ),
-        }}
-      />
+
       <Tab.Screen
         name="Add Blog"
         component={AddBolgScreen}
@@ -74,27 +60,27 @@ function Tabs({ navigation }) {
           ),
         }}
       />
-    </Tab.Navigator>
-  );
-}
-
-const Drawer = createDrawerNavigator();
-
-function DrawerNavigation() {
-  return (
-    <Drawer.Navigator screenOptions={{ headerShown: false }}>
-      <Drawer.Screen name="Home" component={Tabs} />
-      <Drawer.Screen
+      <Tab.Screen
         name="Profile"
         component={ProfileScreen}
-        options={{ headerShown: true }}
+        options={{
+          headerShown: true,
+          tabBarIcon: ({ size, color }) => (
+            <Ionicons name="person" size={size} color={color} />
+          ),
+        }}
       />
-      <Drawer.Screen
+      <Tab.Screen
         name="settings"
         component={SettingScreen}
-        options={{ headerShown: true }}
+        options={{
+          headerShown: true,
+          tabBarIcon: ({ size, color }) => (
+            <Ionicons name="settings" size={size} color={color} />
+          ),
+        }}
       />
-    </Drawer.Navigator>
+    </Tab.Navigator>
   );
 }
 
@@ -107,8 +93,17 @@ const Navigator = () => {
     <>
       {login ? (
         <Stack.Navigator>
-          <Stack.Group screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="Drawer" component={DrawerNavigation} />
+          <Stack.Group
+            screenOptions={{
+              headerShown: false,
+            }}
+          >
+            <Stack.Screen name="Tab" component={Tabs} />
+            <Stack.Screen
+              name="SingleBlogScreen"
+              component={SingleBlogScreen}
+              options={{ headerShown: false }}
+            />
           </Stack.Group>
         </Stack.Navigator>
       ) : (

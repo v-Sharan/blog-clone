@@ -14,11 +14,13 @@ const CustomButton = ({
   bgColor,
   fgColor,
   loading,
+  width,
 }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
       style={[
+        width && { width: 1 },
         styles.container,
         styles[`container_${type}`],
         bgColor ? { backgroundColor: bgColor } : {},

@@ -11,7 +11,7 @@ import {
   ToastAndroid,
   TouchableOpacity,
 } from "react-native";
-import { CustomInput, CustomButton } from "../../components";
+import { CustomInput, CustomButton, LoadingModel } from "../../components";
 import { useForm } from "react-hook-form";
 import * as ImagePicker from "expo-image-picker";
 import { useAuth } from "../../../context/auth";
@@ -40,7 +40,7 @@ const LoginScreen = ({ navigation }) => {
     formData.append("discription", data.discription);
 
     axios
-      .post("http:192.168.185.177:8080/postBlog/blog", formData, {
+      .post("http:192.168.160.177:8080/postBlog/blog", formData, {
         headers: {
           Accept: "application/json",
           "Content-Type": "multipart/form-data",
@@ -50,7 +50,7 @@ const LoginScreen = ({ navigation }) => {
         ToastAndroid.show(res.data.message, ToastAndroid.SHORT);
         Alert.alert(res.data.message);
         setTimeout(() => {
-          navigation.navigate("Tab");
+          navigation.navigate("Home");
         }, 1000);
       })
       .catch((err) => console.log(err.response))
@@ -68,7 +68,7 @@ const LoginScreen = ({ navigation }) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [2, 2],
       quality: 1,
     });
 
@@ -89,7 +89,7 @@ const LoginScreen = ({ navigation }) => {
     >
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={[styles.root, { maxHeight: height }]}>
-          {loading && <Text>Loading</Text>}
+          {loading && <LoadingModel isLoading={loading} />}
           <CustomInput
             title="Topic:"
             name="topic"
