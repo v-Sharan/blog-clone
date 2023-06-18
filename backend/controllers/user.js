@@ -76,6 +76,10 @@ export const createUser = async (req, res, next) => {
 
   const { username, email, password } = req.body;
 
+  const jwtToken = jwt.sign({ email, username }, process.env.SECRET, {
+    expiresIn: "90h",
+  });
+
   try {
     let existingUser;
 
@@ -104,10 +108,15 @@ export const createUser = async (req, res, next) => {
           "https://res.cloudinary.com/dfje97i0k/image/upload/v1686723552/personimg_o7xaah.jpg",
         blogs: [],
       });
+      const userLoged = {
+        id: createdUser._id,
+        userPhoto: createdUser.userPhoto,
+        userName: createdUser.username,
+      };
       try {
         await createdUser.save();
         console.log("user created");
-        res.json({ message: "Registered sucessfully" });
+        res.json({ user: userLoged, token: jwtToken });
       } catch (err) {
         const error = new HttpError("Signing in faild, try again later", 201);
         return next(error);
@@ -175,7 +184,7 @@ export const login = async (req, res, next) => {
       userPhoto: user.userPhoto,
       userName: user.username,
     };
-    res.json({ user: userLoged, jwtToken });
+    res.json({ user: userLoged, token: jwtToken });
   } else {
     return next(new HttpError("Credentials seems to be wrong", 500));
   }

@@ -3,13 +3,6 @@ import { User } from "../mongodb/schema/user.js";
 import { HttpError } from "../utils/HttpError.js";
 import { validationResult } from "express-validator";
 import mongoose from "mongoose";
-import { v2 as cloudinary } from "cloudinary";
-
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
 
 export const createBlog = async (req, res, next) => {
   const errors = validationResult(req);
@@ -18,9 +11,9 @@ export const createBlog = async (req, res, next) => {
       new HttpError("Invalid inputs passed, please check your data.", 422)
     );
   }
-  const { creator, discription, title, image } = req.body;
+  const { creator, discription, topic } = req.body;
 
-  let existingUser;
+  let existingUser, createdBlog;
 
   try {
     existingUser = await User.findById(creator);
@@ -33,18 +26,19 @@ export const createBlog = async (req, res, next) => {
     return next(error);
   }
 
-  const photoUrl = await cloudinary.uploader.upload(image);
-  console.log(photoUrl.url);
+  const splitPath = req.file.path.split("\\");
 
-  const createdBlog = new Blog({
-    creator,
-    title,
-    username: existingUser.username,
-    discription,
-    comments: [],
-    image: photoUrl.url,
-    // tags,
-  });
+  try {
+    createdBlog = new Blog({
+      creator,
+      topic,
+      discription,
+      comments: [],
+      image: splitPath[0] + "/" + splitPath[1],
+    });
+  } catch (error) {
+    console.log(error);
+  }
 
   try {
     const sess = await mongoose.startSession();
@@ -80,7 +74,7 @@ export const getBlogById = async (req, res, next) => {
 export const getBlogByUserId = () => {};
 
 export const getAllBlog = async (req, res, next) => {
-  const blogs = await Blog.find({}).populate("creator", "-password");
+  const blogs = await Blog.find({}).populate("creator", "-password -blogs");
   if (blogs) {
     res.json(blogs);
   } else {
