@@ -11,6 +11,10 @@ const CustomInput = ({
   icon,
   mode,
   title,
+  multiline,
+  numberOfLines,
+  editable,
+  maxLength,
 }) => {
   return (
     <Controller
@@ -48,6 +52,10 @@ const CustomInput = ({
               style={styles.input}
               secureTextEntry={secureTextEntry}
               inputMode={mode}
+              multiline={multiline}
+              numberOfLines={numberOfLines}
+              editable={editable}
+              maxLength={maxLength}
             />
             {icon}
           </View>

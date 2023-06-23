@@ -105,7 +105,7 @@ export const createUser = async (req, res, next) => {
         email,
         password,
         userPhoto:
-          "https://res.cloudinary.com/dfje97i0k/image/upload/v1686723552/personimg_o7xaah.jpg",
+          "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/user.png",
         blogs: [],
       });
       const userLoged = {
@@ -178,11 +178,14 @@ export const login = async (req, res, next) => {
     );
     return next(error);
   }
+  const numberOfBlogs = user.blogs.length;
   if (user.email === email && user.password === password) {
     const userLoged = {
       id: user._id,
       userPhoto: user.userPhoto,
       userName: user.username,
+      numberOfBlogs,
+      createdAt: user.createdAt,
     };
     res.json({ user: userLoged, token: jwtToken });
   } else {

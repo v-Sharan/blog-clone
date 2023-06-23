@@ -6,34 +6,62 @@ import {
   useWindowDimensions,
   Pressable,
 } from "react-native";
+import { useState } from "react";
 import { Entypo } from "@expo/vector-icons";
 import CustomButton from "./CustomButton";
 import { useNavigation } from "@react-navigation/native";
+import DeleteModel from "./DeleteModel";
+import { useAuth } from "../../context/auth";
+import calendar from "dayjs/plugin/calendar";
+import dayjs from "dayjs";
 
-const Blogs = ({ creator, discription, topic, image, createdAt, _id }) => {
+dayjs.extend(calendar);
+
+const Blogs = ({
+  creator,
+  discription,
+  topic,
+  image,
+  createdAt,
+  _id,
+  userImg,
+  userName,
+  isMe = false,
+  refetch,
+}) => {
   const navigation = useNavigation();
   const { width } = useWindowDimensions();
-  const date = new Date(createdAt).toDateString();
+  const date = dayjs().calendar(dayjs(createdAt));
+  const [deleteBlog, setDeleteBlog] = useState(false);
+  const { user } = useAuth();
+  const GoProfile = () => {
+    if (creator?._id === user.id) {
+      navigation.navigate("Profile");
+    } else {
+      navigation.navigate("OtherProfile Screen", { userId: creator?._id });
+    }
+  };
+
   return (
     <View style={[styles.post, { width: width - 20 }]}>
-      <View style={styles.header}>
-        <Pressable onPress={() => console.warn(creator?.username)}>
+      <Pressable onPress={GoProfile}>
+        <View style={styles.header}>
           <Image
-            source={{ uri: creator.userPhoto }}
+            source={{ uri: creator.userPhoto || userImg }}
             style={styles.profileImage}
           />
-        </Pressable>
-        <View>
-          <Text style={styles.name}>{creator.username}</Text>
-          <Text style={styles.subtitle}>{date}</Text>
+          <View>
+            <Text style={styles.name}>{creator.username || userName}</Text>
+            <Text style={styles.subtitle}>{date}</Text>
+          </View>
+          <Entypo
+            name="dots-three-horizontal"
+            size={18}
+            color="gray"
+            style={styles.icon}
+          />
         </View>
-        <Entypo
-          name="dots-three-horizontal"
-          size={18}
-          color="gray"
-          style={styles.icon}
-        />
-      </View>
+      </Pressable>
       <Text style={styles.topic}>{topic}</Text>
       <Text style={styles.description}>{discription}</Text>
       {image && (
@@ -49,17 +77,39 @@ const Blogs = ({ creator, discription, topic, image, createdAt, _id }) => {
       )}
       <View style={styles.footer}>
         <View style={styles.buttonsRow}>
+          <CustomButton
+            text="Read More"
+            bgColor={"black"}
+            fgColor="white"
+            onPress={() => navigation.navigate("SingleBlogScreen", { id: _id })}
+          />
+        </View>
+        {isMe && (
           <View style={styles.iconButton}>
             <CustomButton
-              text="Read More"
-              bgColor={"black"}
+              text="Edit"
+              bgColor={"blue"}
               fgColor="white"
               onPress={() =>
-                navigation.navigate("SingleBlogScreen", { id: _id })
+                navigation.navigate("EditBlog Screen", { id: _id })
               }
             />
+            <CustomButton
+              text="Delete"
+              bgColor={"red"}
+              fgColor="white"
+              onPress={() => setDeleteBlog(true)}
+            />
           </View>
-        </View>
+        )}
+        {deleteBlog && (
+          <DeleteModel
+            deleteBlog={deleteBlog}
+            setDeleteBlog={setDeleteBlog}
+            id={_id}
+            refetch={refetch}
+          />
+        )}
       </View>
     </View>
   );
@@ -122,6 +172,8 @@ const styles = StyleSheet.create({
   iconButton: {
     flexDirection: "row",
     alignItems: "center",
+    width: "50%",
+    gap: 10,
   },
   iconButtonText: {
     color: "gray",

@@ -14,13 +14,12 @@ import axios from "axios";
 import { EvilIcons } from "@expo/vector-icons";
 import { Blogs, LoadingModel } from "../../components";
 import { useFocusEffect } from "@react-navigation/native";
-import { Overlay } from "@rneui/themed";
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = () => {
   const [searchText, setSearchText] = useState(null);
   const [allBlogs, setAllBlogs] = useState(null);
   const [searchTimeout, setSearchTimeout] = useState(null);
-  const [searchedResults, setSearchedResults] = useState([]);
+  const [searchedResults, setSearchedResults] = useState(null);
 
   const { data, refetch, isLoading, isFetched, isRefetching } = useQuery(
     "blogs",
@@ -123,7 +122,7 @@ const HomeScreen = ({ navigation }) => {
         </View>
       )}
       {isLoading && (
-        <LoadingModel isLoading={isLoading && isFetched && isRefetching} />
+        <LoadingModel isLoading={isLoading || isFetched || isRefetching} />
       )}
       <FlatList
         data={!!searchedResults ? searchedResults : allBlogs}

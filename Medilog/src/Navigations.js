@@ -9,8 +9,10 @@ import {
   SignUpScreen,
   AddBolgScreen,
   ProfileScreen,
-  SettingScreen,
   SingleBlogScreen,
+  EditScreen,
+  EditBlog,
+  UserProfileScreen,
 } from "./screens";
 import { Image, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -70,16 +72,6 @@ function Tabs({ navigation }) {
           ),
         }}
       />
-      <Tab.Screen
-        name="settings"
-        component={SettingScreen}
-        options={{
-          headerShown: true,
-          tabBarIcon: ({ size, color }) => (
-            <Ionicons name="settings" size={size} color={color} />
-          ),
-        }}
-      />
     </Tab.Navigator>
   );
 }
@@ -88,6 +80,7 @@ const Stack = createNativeStackNavigator();
 
 const Navigator = () => {
   const { login } = useAuth();
+  console.log(login);
 
   return (
     <>
@@ -103,6 +96,21 @@ const Navigator = () => {
               name="SingleBlogScreen"
               component={SingleBlogScreen}
               options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Edit Screen"
+              component={EditScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="EditBlog Screen"
+              component={EditBlog}
+              options={{ headerShown: true }}
+            />
+            <Stack.Screen
+              name="OtherProfile Screen"
+              component={UserProfileScreen}
+              options={{ headerShown: true }}
             />
           </Stack.Group>
         </Stack.Navigator>

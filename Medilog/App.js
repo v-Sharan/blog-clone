@@ -4,7 +4,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import Navigator from "./src/Navigations";
 import { Provider } from "./context/auth";
 import { QueryClient, QueryClientProvider } from "react-query";
-import "expo-dev-client";
 
 const queryClient = new QueryClient();
 function App() {

@@ -12,8 +12,10 @@ import BlogRoutes from "./routes/blog.js";
 dotenv.config();
 
 const app = express();
+
 app.use("/uploads/blogs", express.static(path.join("uploads", "blogs")));
 app.use("/uploads/profile", express.static(path.join("uploads", "profile")));
+
 app.use(bodyParser.json());
 app.use(cors());
 app.use(express.json());

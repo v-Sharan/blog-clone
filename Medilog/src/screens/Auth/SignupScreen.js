@@ -13,7 +13,6 @@ import { CustomInput, CustomButton } from "../../components";
 import LoginSVG from "../../assets/svg/Register";
 import { useNavigation } from "@react-navigation/native";
 import { useForm } from "react-hook-form";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import axios from "axios";
 import { useAuth } from "../../../context/auth";
@@ -33,11 +32,9 @@ const SignUpScreen = () => {
       .post("http:192.168.160.177:8080/user/signup", data)
       .then((res) => {
         ToastAndroid.show("Register Successfully", ToastAndroid.SHORT);
-        // setTimeout(() => {
-        //   handleLogin(res.data.user, res.data.token);
-        // }, 1000);
-        console.log(JSON.stringify(res.data.user));
-        console.log(res.data.token);
+        setTimeout(() => {
+          handleLogin(res.data.user, res.data.token);
+        }, 1000);
       })
       .catch((err) => {
         Alert.alert("Error Occured", err.response.data.message);

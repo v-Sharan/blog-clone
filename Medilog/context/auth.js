@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
 
 const AuthContext = React.createContext({
-  user: null,
+  user: {},
   token: null,
   handleLogin: (user, token) => {},
-  handleLogOut: () => {},
+  handleLogout: () => {},
   login: null,
 });
 
@@ -14,7 +14,7 @@ export function useAuth() {
 }
 
 export function Provider(props) {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState({});
   const [token, setToken] = useState(null);
   const [login, setLogin] = useState(false);
 
@@ -56,10 +56,10 @@ export function Provider(props) {
 
   const handleLogout = () => {
     SecureStore.deleteItemAsync("user")
-      .then((res) => setUser(null))
+      .then(() => setUser({}))
       .catch((err) => console.log(err));
     SecureStore.deleteItemAsync("token")
-      .then((res) => setToken(null))
+      .then(() => setToken(null))
       .catch((err) => console.log(err));
   };
 

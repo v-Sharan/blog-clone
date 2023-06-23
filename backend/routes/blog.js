@@ -5,6 +5,8 @@ import {
   getBlogById,
   getBlogByUserId,
   getAllBlog,
+  blogUpdate,
+  blogDelete,
 } from "../controllers/blog.js";
 
 import { checkToken } from "../middleware/CheckJwtToken.js";
@@ -29,5 +31,16 @@ router.get("/blogByUser/:userId", getBlogByUserId);
 router.get("/", getAllBlog);
 
 router.get("/blog/:blogId", getBlogById);
+router.delete("/blog/:blogId", blogDelete);
+router.patch(
+  "/blog/edit/:blogId",
+  fileUpload.single("image"),
+  [
+    check("creator").not().isEmpty(),
+    check("discription").not().isEmpty(),
+    check("topic").not().isEmpty(),
+  ],
+  blogUpdate
+);
 
 export default router;

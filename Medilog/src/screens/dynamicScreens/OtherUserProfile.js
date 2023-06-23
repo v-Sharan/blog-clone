@@ -5,17 +5,10 @@ import {
   Image,
   Dimensions,
   FlatList,
-  Pressable,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
 import { Blogs, LoadingModel } from "../../components";
-import {
-  MaterialCommunityIcons,
-  MaterialIcons,
-  Ionicons,
-  Entypo,
-} from "@expo/vector-icons";
-import { useAuth } from "../../../context/auth";
+import { Ionicons, Entypo } from "@expo/vector-icons";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { useCallback, useRef } from "react";
@@ -30,9 +23,7 @@ const bg = "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/images/1.jpg";
 
 const profilePictureWidth = Dimensions.get("window").width * 0.4;
 
-const ProfileScreenHeader = ({ user, isMe = false }) => {
-  const { handleLogout } = useAuth();
-
+const OtherUserPRofile = ({ user }) => {
   return (
     <View style={styles.container}>
       <Image source={{ uri: bg }} style={styles.bg} />
@@ -40,26 +31,8 @@ const ProfileScreenHeader = ({ user, isMe = false }) => {
         source={{ uri: user?.userPhoto || dummy_img }}
         style={styles.image}
       />
+
       <Text style={styles.name}>{user.userName}</Text>
-      {isMe && (
-        <>
-          <View style={styles.buttonsContainer}>
-            <Pressable style={styles.button}>
-              <MaterialCommunityIcons name="pencil" size={16} color="black" />
-              <Text style={styles.buttonText}>Edit Profile</Text>
-            </Pressable>
-            <Pressable
-              onPress={handleLogout}
-              style={[
-                styles.button,
-                { flex: 0, width: 50, backgroundColor: "red" },
-              ]}
-            >
-              <MaterialIcons name="logout" size={16} color="white" />
-            </Pressable>
-          </View>
-        </>
-      )}
 
       <View style={styles.textLine}>
         <Entypo
@@ -68,25 +41,7 @@ const ProfileScreenHeader = ({ user, isMe = false }) => {
           color="gray"
           style={{ width: 25 }}
         />
-        <Text>Graduated College</Text>
-      </View>
-      <View style={styles.textLine}>
-        <Entypo
-          name="graduation-cap"
-          size={18}
-          color="gray"
-          style={{ width: 25 }}
-        />
-        <Text>Profession</Text>
-      </View>
-      <View style={styles.textLine}>
-        <Entypo
-          name="graduation-cap"
-          size={18}
-          color="gray"
-          style={{ width: 25 }}
-        />
-        <Text>Current working place</Text>
+        <Text>Graduated university</Text>
       </View>
 
       <View style={styles.textLine}>
@@ -107,15 +62,15 @@ const ProfileScreenHeader = ({ user, isMe = false }) => {
   );
 };
 
-const ProfileScreen = () => {
-  const { user } = useAuth();
+const ProfileScreen = ({ route }) => {
   const firstTimeRef = useRef(true);
+  const { userId } = route?.params;
 
   const { data, refetch, isLoading, isRefetching, isFetching } = useQuery(
     "BlogsByID",
     () => {
       return axios.get(
-        `http:192.168.160.177:8080/postBlog/blogByUser/${user.id}`
+        `http:192.168.160.177:8080/postBlog/blogByUser/${userId}`
       );
     }
   );
@@ -135,7 +90,6 @@ const ProfileScreen = () => {
       renderItem={({ item }) => (
         <Blogs
           userImg={user.userPhoto}
-          isMe={true}
           userName={user.userName}
           refetch={refetch}
           {...item}
@@ -145,7 +99,7 @@ const ProfileScreen = () => {
       ListHeaderComponent={() => (
         <>
           <LoadingModel isLoading={isLoading || isFetching || isRefetching} />
-          <ProfileScreenHeader user={user} isMe={true} />
+          <OtherUserPRofile user={user} />
           <Text style={styles.sectionTitle}>Blogs</Text>
           {data?.data?.user?.blogs.length === 0 && (
             <View

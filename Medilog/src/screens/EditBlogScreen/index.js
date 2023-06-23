@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -15,45 +15,65 @@ import { CustomInput, CustomButton, LoadingModel } from "../../components";
 import { useForm } from "react-hook-form";
 import * as ImagePicker from "expo-image-picker";
 import { useAuth } from "../../../context/auth";
+import { useQuery } from "react-query";
 import axios from "axios";
+import { CheckBox } from "@rneui/themed";
 
-const LoginScreen = ({ navigation }) => {
+const EditBlog = ({ navigation, route }) => {
   const { height, width } = useWindowDimensions();
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
   const { user } = useAuth();
   const [fileName, setFileName] = useState(null);
   const [ext, setExt] = useState(null);
+  const [changeImage, setChangeImage] = useState(false);
+  const { data } = useQuery("Blog", () => {
+    return axios.get(
+      `http:192.168.160.177:8080/postBlog/blog/${route?.params?.id}`
+    );
+  });
 
-  const { control, handleSubmit, reset } = useForm();
+  useEffect(() => {
+    setValue("topic", data?.data?.topic);
+    setValue("discription", data?.data?.discription);
+  }, [data?.data]);
+
+  const { control, handleSubmit, reset, setValue } = useForm();
 
   const handlePost = async (data) => {
     setLoading(true);
+
     const formData = new FormData();
     formData.append("creator", user.id);
-    formData.append("image", {
-      name: fileName,
-      uri: image,
-      type: `image/${ext}`,
-    });
+    if (changeImage) {
+      formData.append("image", {
+        name: fileName,
+        uri: image,
+        type: `image/${ext}`,
+      });
+    }
     formData.append("topic", data.topic);
     formData.append("discription", data.discription);
 
     axios
-      .post("http:192.168.160.177:8080/postBlog/blog", formData, {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "multipart/form-data",
-        },
-      })
+      .patch(
+        `http:192.168.160.177:8080/postBlog/blog/edit/${route?.params?.id}`,
+        formData,
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      )
       .then((res) => {
         ToastAndroid.show(res.data.message, ToastAndroid.SHORT);
         Alert.alert(res.data.message);
         setTimeout(() => {
-          navigation.navigate("Home");
+          navigation.navigate("Profile");
         }, 1000);
       })
-      .catch((err) => console.log(err.response))
+      .catch((err) => console.log(err))
       .finally(() => setLoading(false));
     reset({ topic: "", discription: "" });
     setImage(null);
@@ -114,15 +134,22 @@ const LoginScreen = ({ navigation }) => {
               (Click below image to add)
             </Text>
           </View>
-          <TouchableOpacity style={styles.imagePreview} onPress={pickImage}>
-            <Image
-              source={
-                image ? { uri: image } : require("../../assets/preview.png")
-              }
-              resizeMode="contain"
-              style={{ width: "100%", height: "100%" }}
-            />
-          </TouchableOpacity>
+          <CheckBox
+            title={"Change Image"}
+            checked={changeImage}
+            onPress={() => setChangeImage((prev) => !prev)}
+          />
+          {changeImage && (
+            <TouchableOpacity style={styles.imagePreview} onPress={pickImage}>
+              <Image
+                source={
+                  image ? { uri: image } : require("../../assets/preview.png")
+                }
+                resizeMode="contain"
+                style={{ width: "100%", height: "100%" }}
+              />
+            </TouchableOpacity>
+          )}
         </View>
         <View style={{ width: width - 40, alignSelf: "center" }}>
           <CustomButton
@@ -167,4 +194,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default EditBlog;

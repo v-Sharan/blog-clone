@@ -34,7 +34,7 @@ const CustomButton = ({
           fgColor ? { color: fgColor } : {},
         ]}
       >
-        {loading ? <ActivityIndicator /> : text}
+        {loading ? <ActivityIndicator color={"white"} /> : text}
       </Text>
     </TouchableOpacity>
   );
