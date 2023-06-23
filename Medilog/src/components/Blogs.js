@@ -7,7 +7,6 @@ import {
   Pressable,
 } from "react-native";
 import { useState } from "react";
-import { Entypo } from "@expo/vector-icons";
 import CustomButton from "./CustomButton";
 import { useNavigation } from "@react-navigation/native";
 import DeleteModel from "./DeleteModel";
@@ -54,12 +53,6 @@ const Blogs = ({
             <Text style={styles.name}>{creator.username || userName}</Text>
             <Text style={styles.subtitle}>{date}</Text>
           </View>
-          <Entypo
-            name="dots-three-horizontal"
-            size={18}
-            color="gray"
-            style={styles.icon}
-          />
         </View>
       </Pressable>
       <Text style={styles.topic}>{topic}</Text>

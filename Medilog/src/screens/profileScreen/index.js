@@ -7,7 +7,7 @@ import {
   FlatList,
   Pressable,
 } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { Blogs, LoadingModel } from "../../components";
 import {
   MaterialCommunityIcons,
@@ -32,6 +32,7 @@ const profilePictureWidth = Dimensions.get("window").width * 0.4;
 
 const ProfileScreenHeader = ({ user, isMe = false }) => {
   const { handleLogout } = useAuth();
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
@@ -40,25 +41,26 @@ const ProfileScreenHeader = ({ user, isMe = false }) => {
         source={{ uri: user?.userPhoto || dummy_img }}
         style={styles.image}
       />
-      <Text style={styles.name}>{user.userName}</Text>
+      <Text style={styles.name}>{user.username}</Text>
       {isMe && (
-        <>
-          <View style={styles.buttonsContainer}>
-            <Pressable style={styles.button}>
-              <MaterialCommunityIcons name="pencil" size={16} color="black" />
-              <Text style={styles.buttonText}>Edit Profile</Text>
-            </Pressable>
-            <Pressable
-              onPress={handleLogout}
-              style={[
-                styles.button,
-                { flex: 0, width: 50, backgroundColor: "red" },
-              ]}
-            >
-              <MaterialIcons name="logout" size={16} color="white" />
-            </Pressable>
-          </View>
-        </>
+        <View style={styles.buttonsContainer}>
+          <Pressable
+            style={styles.button}
+            onPress={() => navigation.navigate("Edit Screen")}
+          >
+            <MaterialCommunityIcons name="pencil" size={16} color="black" />
+            <Text style={styles.buttonText}>Edit Profile</Text>
+          </Pressable>
+          <Pressable
+            onPress={handleLogout}
+            style={[
+              styles.button,
+              { flex: 0, width: 50, backgroundColor: "red" },
+            ]}
+          >
+            <MaterialIcons name="logout" size={16} color="white" />
+          </Pressable>
+        </View>
       )}
 
       <View style={styles.textLine}>
@@ -136,7 +138,7 @@ const ProfileScreen = () => {
         <Blogs
           userImg={user.userPhoto}
           isMe={true}
-          userName={user.userName}
+          userName={user.username}
           refetch={refetch}
           {...item}
         />

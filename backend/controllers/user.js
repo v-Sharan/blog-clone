@@ -183,7 +183,7 @@ export const login = async (req, res, next) => {
     const userLoged = {
       id: user._id,
       userPhoto: user.userPhoto,
-      userName: user.username,
+      username: user.username,
       numberOfBlogs,
       createdAt: user.createdAt,
     };

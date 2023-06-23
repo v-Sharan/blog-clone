@@ -21,6 +21,7 @@ const Tab = createBottomTabNavigator();
 
 function Tabs({ navigation }) {
   const { user } = useAuth();
+  console.log(user.id);
   return (
     <Tab.Navigator screenOptions={{ tabBarShowLabel: false }}>
       <Tab.Screen
@@ -100,7 +101,7 @@ const Navigator = () => {
             <Stack.Screen
               name="Edit Screen"
               component={EditScreen}
-              options={{ headerShown: false }}
+              options={{ headerShown: true, title: "Edit Profile" }}
             />
             <Stack.Screen
               name="EditBlog Screen"

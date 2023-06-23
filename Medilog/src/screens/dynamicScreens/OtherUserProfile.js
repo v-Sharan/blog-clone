@@ -6,12 +6,12 @@ import {
   Dimensions,
   FlatList,
 } from "react-native";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { Blogs, LoadingModel } from "../../components";
 import { Ionicons, Entypo } from "@expo/vector-icons";
 import axios from "axios";
 import { useQuery } from "react-query";
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useEffect } from "react";
 import calendar from "dayjs/plugin/calendar";
 import dayjs from "dayjs";
 
@@ -32,7 +32,7 @@ const OtherUserPRofile = ({ user }) => {
         style={styles.image}
       />
 
-      <Text style={styles.name}>{user.userName}</Text>
+      <Text style={styles.name}>{user.username}</Text>
 
       <View style={styles.textLine}>
         <Entypo
@@ -41,7 +41,25 @@ const OtherUserPRofile = ({ user }) => {
           color="gray"
           style={{ width: 25 }}
         />
-        <Text>Graduated university</Text>
+        <Text>Graduated College</Text>
+      </View>
+      <View style={styles.textLine}>
+        <Entypo
+          name="graduation-cap"
+          size={18}
+          color="gray"
+          style={{ width: 25 }}
+        />
+        <Text>Profession</Text>
+      </View>
+      <View style={styles.textLine}>
+        <Entypo
+          name="graduation-cap"
+          size={18}
+          color="gray"
+          style={{ width: 25 }}
+        />
+        <Text>Current working place</Text>
       </View>
 
       <View style={styles.textLine}>
@@ -65,6 +83,7 @@ const OtherUserPRofile = ({ user }) => {
 const ProfileScreen = ({ route }) => {
   const firstTimeRef = useRef(true);
   const { userId } = route?.params;
+  const navigation = useNavigation();
 
   const { data, refetch, isLoading, isRefetching, isFetching } = useQuery(
     "BlogsByID",
@@ -74,6 +93,11 @@ const ProfileScreen = ({ route }) => {
       );
     }
   );
+
+  useEffect(() => {
+    navigation.setOptions({ title: data?.data?.user?.username });
+  }, []);
+
   useFocusEffect(
     useCallback(() => {
       if (firstTimeRef.current) {
@@ -89,8 +113,8 @@ const ProfileScreen = ({ route }) => {
       data={data?.data?.user?.blogs}
       renderItem={({ item }) => (
         <Blogs
-          userImg={user.userPhoto}
-          userName={user.userName}
+          userImg={data?.data?.user?.userPhoto}
+          userName={data?.data?.user?.username}
           refetch={refetch}
           {...item}
         />
@@ -99,7 +123,7 @@ const ProfileScreen = ({ route }) => {
       ListHeaderComponent={() => (
         <>
           <LoadingModel isLoading={isLoading || isFetching || isRefetching} />
-          <OtherUserPRofile user={user} />
+          <OtherUserPRofile user={data?.data?.user} />
           <Text style={styles.sectionTitle}>Blogs</Text>
           {data?.data?.user?.blogs.length === 0 && (
             <View
