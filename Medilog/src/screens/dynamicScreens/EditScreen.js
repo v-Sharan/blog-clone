@@ -68,12 +68,16 @@ const EditScreen = ({ route }) => {
     });
 
     axios
-      .patch(`http:192.168.160.177:8080/user/${route?.params?.id}`, formData, {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "multipart/form-data",
-        },
-      })
+      .patch(
+        `https://medilog.onrender.com/user/${route?.params?.id}`,
+        formData,
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      )
       .then((res) => {
         ToastAndroid.show(res.data.message, ToastAndroid.SHORT);
         Alert.alert(res.data.message);

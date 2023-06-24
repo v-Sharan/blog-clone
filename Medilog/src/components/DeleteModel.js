@@ -12,7 +12,7 @@ const DeleteModel = ({ deleteBlog, id, setDeleteBlog, refetch }) => {
   const handleDelete = (id) => {
     setLoading(true);
     axios
-      .delete(`http:192.168.160.177:8080/postBlog/blog/${id}`, {
+      .delete(`https://medilog.onrender.com/postBlog/blog/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
