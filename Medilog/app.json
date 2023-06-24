@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/logo.png",
       "resizeMode": "contain",
-      "backgroundColor": "balck"
+      "backgroundColor": "#000000c0"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -19,8 +19,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.sago_sharan.Medilog"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -34,11 +33,6 @@
           "microphonePermission": false
         }
       ]
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "10b310be-a503-4467-8ca5-e61e44b9b5c3"
-      }
-    }
+    ]
   }
 }
