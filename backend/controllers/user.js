@@ -138,8 +138,7 @@ export const updateUser = async (req, res, next) => {
 
   let user, image, updatedUser, options;
   if (req.file) {
-    const splitPath = req.file.path.split("\\");
-    image = splitPath[0] + "/" + splitPath[1] + "/" + splitPath[2];
+    image = req.file.path;
     options = { username, userPhoto: image };
   } else {
     options = { username };

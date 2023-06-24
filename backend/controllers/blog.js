@@ -27,16 +27,13 @@ export const createBlog = async (req, res, next) => {
     return next(error);
   }
 
-  const splitPath = req.file.path.split("\\");
-  console.log(splitPath);
-
   try {
     createdBlog = new Blog({
       creator,
       topic,
       discription,
       comments: [],
-      image: splitPath[0] + "/" + splitPath[1] + "/" + splitPath[2],
+      image: req.file.path,
     });
   } catch (err) {
     const error = new HttpError("Something went wrong", 500);
@@ -165,12 +162,10 @@ export const blogUpdate = async (req, res, next) => {
   if (req.file) {
     fs.unlink(existingBlog.image, (err) => console.log(err));
 
-    const splitPath = req.file.path.split("\\");
-    image = splitPath[0] + "/" + splitPath[1] + "/" + splitPath[2];
     options = {
       topic,
       discription,
-      image,
+      image: req.file.path,
     };
   } else {
     options = {
