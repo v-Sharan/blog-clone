@@ -28,7 +28,6 @@ export const createBlog = async (req, res, next) => {
   }
 
   const splitPath = req.file.path.split("\\");
-  console.log(splitPath);
 
   try {
     createdBlog = new Blog({
@@ -38,8 +37,9 @@ export const createBlog = async (req, res, next) => {
       comments: [],
       image: splitPath[0] + "/" + splitPath[1] + "/" + splitPath[2],
     });
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    const error = new HttpError("Something went wrong", 500);
+    return next(error);
   }
 
   try {
@@ -56,7 +56,6 @@ export const createBlog = async (req, res, next) => {
     );
     return next(error);
   }
-  console.log("post created");
   res.status(201).json({ message: "Blog Posted" });
 };
 
@@ -147,8 +146,6 @@ export const blogUpdate = async (req, res, next) => {
   const { discription, topic } = req.body;
   const { blogId } = req.params;
 
-  console.log(topic);
-
   let existingBlog, image, options;
 
   try {
@@ -166,7 +163,6 @@ export const blogUpdate = async (req, res, next) => {
     fs.unlink(existingBlog.image, (err) => console.log(err));
 
     const splitPath = req.file.path.split("\\");
-    console.log(splitPath);
     image = splitPath[0] + "/" + splitPath[1] + "/" + splitPath[2];
     options = {
       topic,
@@ -185,7 +181,6 @@ export const blogUpdate = async (req, res, next) => {
 
     res.status(201).json({ message: "Blog Posted" });
   } catch (err) {
-    console.log(err);
     const error = new HttpError(
       "Something went wrong while posting a blog",
       401

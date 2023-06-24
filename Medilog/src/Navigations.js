@@ -21,7 +21,6 @@ const Tab = createBottomTabNavigator();
 
 function Tabs({ navigation }) {
   const { user } = useAuth();
-  console.log(user.id);
   return (
     <Tab.Navigator screenOptions={{ tabBarShowLabel: false }}>
       <Tab.Screen
@@ -37,8 +36,13 @@ function Tabs({ navigation }) {
               onPress={() => navigation.navigate("Profile")}
             >
               <Image
-                source={{ uri: user?.userPhoto, width: 40, height: 40 }}
+                source={{
+                  uri: "http:192.168.160.177:8080/" + user?.userPhoto,
+                  width: 40,
+                  height: 40,
+                }}
                 resizeMode="contain"
+                style={{ borderRadius: 50 }}
               />
             </TouchableOpacity>
           ),
@@ -50,7 +54,7 @@ function Tabs({ navigation }) {
               style={{ paddingRight: 10 }}
             />
           ),
-          title: `Welcome ${user?.userName}!`,
+          title: `Welcome ${user?.username}!`,
         }}
       />
 
@@ -81,7 +85,6 @@ const Stack = createNativeStackNavigator();
 
 const Navigator = () => {
   const { login } = useAuth();
-  console.log(login);
 
   return (
     <>

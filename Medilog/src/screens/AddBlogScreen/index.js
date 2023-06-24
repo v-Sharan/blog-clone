@@ -53,14 +53,16 @@ const LoginScreen = ({ navigation }) => {
           navigation.navigate("Home");
         }, 1000);
       })
-      .catch((err) => console.log(err.response))
+      .catch((err) => {
+        Alert.alert(err.response.data.message);
+      })
       .finally(() => setLoading(false));
     reset({ topic: "", discription: "" });
     setImage(null);
   };
 
   const handleReset = () => {
-    +reset({ topic: "", discription: "" });
+    reset({ topic: "", discription: "" });
     setImage(null);
   };
 

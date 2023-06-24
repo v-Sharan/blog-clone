@@ -35,7 +35,6 @@ export const createUserByGoogle = async (req, res, next) => {
     try {
       existingUser = await User.findOne({ email: email });
     } catch (err) {
-      console.log(err);
       const error = new HttpError(
         "Signing up failed, please again later.",
         500
@@ -51,10 +50,8 @@ export const createUserByGoogle = async (req, res, next) => {
         userPhoto: picture,
         blogs: [],
       });
-      console.log("user created");
       try {
         await createdUser.save();
-        console.log("user created");
         res.json({ user: createdUser });
       } catch (err) {
         const error = new HttpError("Signing in faild, try again later", 201);
@@ -86,7 +83,6 @@ export const createUser = async (req, res, next) => {
     try {
       existingUser = await User.findOne({ email: email });
     } catch (err) {
-      console.log(err);
       const error = new HttpError(
         "Signing up failed, please again later.",
         500
@@ -104,18 +100,18 @@ export const createUser = async (req, res, next) => {
         username,
         email,
         password,
-        userPhoto:
-          "https://notjustdev-dummy.s3.us-east-2.amazonaws.com/avatars/user.png",
+        userPhoto: "uploads/profile/6756f9b5-a463-4e6e-a5e1-ab43fdfc7fc6.png",
         blogs: [],
       });
+
       const userLoged = {
         id: createdUser._id,
         userPhoto: createdUser.userPhoto,
-        userName: createdUser.username,
+        username: createdUser.username,
+        createdAt: createdUser.createdAt,
       };
       try {
         await createdUser.save();
-        console.log("user created");
         res.json({ user: userLoged, token: jwtToken });
       } catch (err) {
         const error = new HttpError("Signing in faild, try again later", 201);
@@ -172,23 +168,75 @@ export const login = async (req, res, next) => {
   });
 
   if (!user) {
-    const error = new HttpError(
-      "User does't exist,Please sign in first (or) Credentials seems to be wrong",
-      402
-    );
+    const error = new HttpError("User does't exist,Please sign in first", 402);
     return next(error);
   }
-  const numberOfBlogs = user.blogs.length;
+
   if (user.email === email && user.password === password) {
     const userLoged = {
       id: user._id,
       userPhoto: user.userPhoto,
       username: user.username,
-      numberOfBlogs,
       createdAt: user.createdAt,
     };
     res.json({ user: userLoged, token: jwtToken });
   } else {
     return next(new HttpError("Credentials seems to be wrong", 500));
   }
+};
+
+export const updateUser = async (req, res, next) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return next(
+      new HttpError("Invalid inputs passed, please check your data.", 422)
+    );
+  }
+  const { userId } = req.params;
+  const { username } = req.body;
+
+  let user, image, updatedUser, options;
+  if (req.file) {
+    const splitPath = req.file.path.split("\\");
+    image = splitPath[0] + "/" + splitPath[1] + "/" + splitPath[2];
+    options = { username, userPhoto: image };
+  } else {
+    options = { username };
+  }
+  try {
+    user = await User.findByIdAndUpdate(userId, options);
+  } catch (err) {
+    const error = new HttpError("Something went wrong while updating...", 500);
+    return next(error);
+  }
+
+  if (!user) {
+    return next(
+      new HttpError("Could not identify user, please try again", 500)
+    );
+  }
+
+  try {
+    updatedUser = await User.findById(userId);
+  } catch (err) {
+    const error = new HttpError(
+      "Signing up failed, please try again later.",
+      500
+    );
+    return next(error);
+  }
+
+  if (!updatedUser) {
+    return next(
+      new HttpError(
+        "Could not identify user, credentials seem to be wrong.",
+        500
+      )
+    );
+  }
+
+  res.json({
+    message: "updated",
+    user: updatedUser,
+  });
 };

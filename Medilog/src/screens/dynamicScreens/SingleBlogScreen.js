@@ -78,8 +78,7 @@ const SingleBlogScreen = ({ route, navigation }) => {
                   <Image
                     style={{ borderRadius: 50 }}
                     source={{
-                      // uri: `http:192.168.160.177:8080/${data?.data?.creator.userPhoto}`,
-                      uri: data?.data?.creator.userPhoto,
+                      uri: `http:192.168.160.177:8080/${data?.data?.creator.userPhoto}`,
                       width: 20,
                       height: 20,
                     }}

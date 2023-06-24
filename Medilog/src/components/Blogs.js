@@ -27,6 +27,7 @@ const Blogs = ({
   userName,
   isMe = false,
   refetch,
+  creatorid,
 }) => {
   const navigation = useNavigation();
   const { width } = useWindowDimensions();
@@ -34,7 +35,7 @@ const Blogs = ({
   const [deleteBlog, setDeleteBlog] = useState(false);
   const { user } = useAuth();
   const GoProfile = () => {
-    if (creator?._id === user.id) {
+    if ((creator?._id || creatorid) === user.id) {
       navigation.navigate("Profile");
     } else {
       navigation.navigate("OtherProfile Screen", { userId: creator?._id });
@@ -46,7 +47,9 @@ const Blogs = ({
       <Pressable onPress={GoProfile}>
         <View style={styles.header}>
           <Image
-            source={{ uri: creator.userPhoto || userImg }}
+            source={{
+              uri: `http:192.168.160.177:8080/${creator.userPhoto || userImg}`,
+            }}
             style={styles.profileImage}
           />
           <View>
@@ -60,7 +63,7 @@ const Blogs = ({
       {image && (
         <Image
           source={{
-            uri: `http:192.168.160.177:8080/${image}`,
+            uri: "http:192.168.160.177:8080/" + image,
             width: width - 50,
             height: width - 50,
           }}

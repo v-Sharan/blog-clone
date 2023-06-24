@@ -39,7 +39,6 @@ const LoginScreen = () => {
       .catch((err) => {
         Alert.alert("Error Occured", err.response.data.message);
         ToastAndroid.show("Registration faild", ToastAndroid.SHORT);
-        console.log(err.response.data);
       })
       .finally(() => setLoading(false));
     reset({ email: "", password: "" });

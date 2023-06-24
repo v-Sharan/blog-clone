@@ -1,4 +1,4 @@
-import { StyleSheet, Text, ToastAndroid, View } from "react-native";
+import { Alert, StyleSheet, Text, ToastAndroid, View } from "react-native";
 import React, { useState } from "react";
 import { Overlay } from "@rneui/themed";
 import CustomButton from "./CustomButton";
@@ -12,14 +12,12 @@ const DeleteModel = ({ deleteBlog, id, setDeleteBlog, refetch }) => {
     axios
       .delete(`http:192.168.160.177:8080/postBlog/blog/${id}`)
       .then((res) => {
-        console.log(res?.data);
         ToastAndroid.show("Deleted Blog", ToastAndroid.SHORT);
         refetch();
         setDeleteBlog(false);
       })
-      .catch((err) => console.log(err))
+      .catch((err) => Alert.alert(err.response.data.message))
       .finally(() => setLoading(false));
-    console.log("delete", id);
   };
   return (
     <Overlay isVisible={deleteBlog} overlayStyle={styles.modalView}>

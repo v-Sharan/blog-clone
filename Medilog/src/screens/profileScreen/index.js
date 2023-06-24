@@ -38,7 +38,11 @@ const ProfileScreenHeader = ({ user, isMe = false }) => {
     <View style={styles.container}>
       <Image source={{ uri: bg }} style={styles.bg} />
       <Image
-        source={{ uri: user?.userPhoto || dummy_img }}
+        source={{
+          uri: user?.userPhoto
+            ? "http:192.168.160.177:8080/" + user?.userPhoto
+            : dummy_img,
+        }}
         style={styles.image}
       />
       <Text style={styles.name}>{user.username}</Text>
@@ -46,7 +50,7 @@ const ProfileScreenHeader = ({ user, isMe = false }) => {
         <View style={styles.buttonsContainer}>
           <Pressable
             style={styles.button}
-            onPress={() => navigation.navigate("Edit Screen")}
+            onPress={() => navigation.navigate("Edit Screen", { id: user?.id })}
           >
             <MaterialCommunityIcons name="pencil" size={16} color="black" />
             <Text style={styles.buttonText}>Edit Profile</Text>
@@ -121,6 +125,7 @@ const ProfileScreen = () => {
       );
     }
   );
+
   useFocusEffect(
     useCallback(() => {
       if (firstTimeRef.current) {
@@ -141,6 +146,7 @@ const ProfileScreen = () => {
           userName={user.username}
           refetch={refetch}
           {...item}
+          creatorid={data?.data?.user?._id}
         />
       )}
       showsVerticalScrollIndicator={false}

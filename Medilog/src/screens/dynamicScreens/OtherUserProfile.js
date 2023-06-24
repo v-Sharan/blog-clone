@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { Blogs, LoadingModel } from "../../components";
-import { Ionicons, Entypo } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { useQuery } from "react-query";
 import { useCallback, useRef, useEffect } from "react";
@@ -28,53 +28,17 @@ const OtherUserPRofile = ({ user }) => {
     <View style={styles.container}>
       <Image source={{ uri: bg }} style={styles.bg} />
       <Image
-        source={{ uri: user?.userPhoto || dummy_img }}
+        source={{
+          uri: user?.userPhoto
+            ? "http:192.168.160.177:8080/" + user?.userPhoto
+            : dummy_img,
+        }}
         style={styles.image}
       />
-
       <Text style={styles.name}>{user.username}</Text>
-
-      <View style={styles.textLine}>
-        <Entypo
-          name="graduation-cap"
-          size={18}
-          color="gray"
-          style={{ width: 25 }}
-        />
-        <Text>Graduated College</Text>
-      </View>
-      <View style={styles.textLine}>
-        <Entypo
-          name="graduation-cap"
-          size={18}
-          color="gray"
-          style={{ width: 25 }}
-        />
-        <Text>Profession</Text>
-      </View>
-      <View style={styles.textLine}>
-        <Entypo
-          name="graduation-cap"
-          size={18}
-          color="gray"
-          style={{ width: 25 }}
-        />
-        <Text>Current working place</Text>
-      </View>
-
       <View style={styles.textLine}>
         <Ionicons name="time" size={18} color="gray" style={{ width: 25 }} />
         <Text>Joined on {dayjs().calendar(dayjs(user.createdAt))}</Text>
-      </View>
-
-      <View style={styles.textLine}>
-        <Entypo
-          name="location-pin"
-          size={18}
-          color="gray"
-          style={{ width: 25 }}
-        />
-        <Text>From Tenerife</Text>
       </View>
     </View>
   );

@@ -73,7 +73,7 @@ const EditBlog = ({ navigation, route }) => {
           navigation.navigate("Profile");
         }, 1000);
       })
-      .catch((err) => console.log(err))
+      .catch((err) => Alert.alert(err.response.data.message))
       .finally(() => setLoading(false));
     reset({ topic: "", discription: "" });
     setImage(null);

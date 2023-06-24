@@ -5,7 +5,10 @@ import {
   getUserByID,
   createUser,
   login,
+  updateUser,
 } from "../controllers/user.js";
+
+import { fileUploadProfile } from "../middleware/file-upload.js";
 
 const router = Router();
 
@@ -30,5 +33,11 @@ router.post(
 );
 
 router.get("/:userId", getUserByID);
+router.patch(
+  "/:userId",
+  fileUploadProfile.single("image"),
+  [check("username").notEmpty()],
+  updateUser
+);
 
 export default router;
