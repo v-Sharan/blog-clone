@@ -14,17 +14,21 @@ import axios from "axios";
 import { EvilIcons } from "@expo/vector-icons";
 import { Blogs, LoadingModel } from "../../components";
 import { useFocusEffect } from "@react-navigation/native";
+import { useAuth } from "../../../context/auth";
 
 const HomeScreen = () => {
   const [searchText, setSearchText] = useState(null);
   const [allBlogs, setAllBlogs] = useState(null);
   const [searchTimeout, setSearchTimeout] = useState(null);
   const [searchedResults, setSearchedResults] = useState(null);
+  const { token } = useAuth();
 
   const { data, refetch, isLoading, isFetched, isRefetching } = useQuery(
     "blogs",
     () => {
-      return axios.get("http:192.168.160.177:8080/postBlog");
+      return axios.get("http:192.168.160.177:8080/postBlog", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
     }
   );
   const { width } = useWindowDimensions();

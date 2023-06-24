@@ -13,7 +13,6 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
   Ionicons,
-  Entypo,
 } from "@expo/vector-icons";
 import { useAuth } from "../../../context/auth";
 import axios from "axios";
@@ -36,7 +35,12 @@ const ProfileScreenHeader = ({ user, isMe = false }) => {
 
   return (
     <View style={styles.container}>
-      <Image source={{ uri: bg }} style={styles.bg} />
+      <Image
+        source={{
+          uri: user?.bg ? "http:192.168.160.177:8080/" + user?.bg : bg,
+        }}
+        style={styles.bg}
+      />
       <Image
         source={{
           uri: user?.userPhoto
@@ -68,60 +72,25 @@ const ProfileScreenHeader = ({ user, isMe = false }) => {
       )}
 
       <View style={styles.textLine}>
-        <Entypo
-          name="graduation-cap"
-          size={18}
-          color="gray"
-          style={{ width: 25 }}
-        />
-        <Text>Graduated College</Text>
-      </View>
-      <View style={styles.textLine}>
-        <Entypo
-          name="graduation-cap"
-          size={18}
-          color="gray"
-          style={{ width: 25 }}
-        />
-        <Text>Profession</Text>
-      </View>
-      <View style={styles.textLine}>
-        <Entypo
-          name="graduation-cap"
-          size={18}
-          color="gray"
-          style={{ width: 25 }}
-        />
-        <Text>Current working place</Text>
-      </View>
-
-      <View style={styles.textLine}>
         <Ionicons name="time" size={18} color="gray" style={{ width: 25 }} />
         <Text>Joined on {dayjs().calendar(dayjs(user.createdAt))}</Text>
-      </View>
-
-      <View style={styles.textLine}>
-        <Entypo
-          name="location-pin"
-          size={18}
-          color="gray"
-          style={{ width: 25 }}
-        />
-        <Text>From Tenerife</Text>
       </View>
     </View>
   );
 };
 
 const ProfileScreen = () => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const firstTimeRef = useRef(true);
 
   const { data, refetch, isLoading, isRefetching, isFetching } = useQuery(
     "BlogsByID",
     () => {
       return axios.get(
-        `http:192.168.160.177:8080/postBlog/blogByUser/${user.id}`
+        `http:192.168.160.177:8080/postBlog/blogByUser/${user.id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
     }
   );

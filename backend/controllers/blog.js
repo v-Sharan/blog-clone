@@ -146,6 +146,8 @@ export const blogUpdate = async (req, res, next) => {
   const { discription, topic } = req.body;
   const { blogId } = req.params;
 
+  console.log(blogId);
+
   let existingBlog, image, options;
 
   try {

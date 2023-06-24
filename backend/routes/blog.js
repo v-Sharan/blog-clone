@@ -14,8 +14,9 @@ import { fileUpload } from "../middleware/file-upload.js";
 
 const router = Router();
 
-// router.use(checkToken);
+router.use(checkToken);
 
+router.get("/", getAllBlog);
 router.post(
   "/blog",
   fileUpload.single("image"),
@@ -28,7 +29,6 @@ router.post(
 );
 
 router.get("/blogByUser/:userId", getBlogByUserId);
-router.get("/", getAllBlog);
 
 router.get("/blog/:blogId", getBlogById);
 router.delete("/blog/:blogId", blogDelete);

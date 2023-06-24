@@ -14,6 +14,7 @@ import { useQuery } from "react-query";
 import { useCallback, useRef, useEffect } from "react";
 import calendar from "dayjs/plugin/calendar";
 import dayjs from "dayjs";
+import { useAuth } from "../../../context/auth";
 
 dayjs.extend(calendar);
 
@@ -48,12 +49,16 @@ const ProfileScreen = ({ route }) => {
   const firstTimeRef = useRef(true);
   const { userId } = route?.params;
   const navigation = useNavigation();
+  const { token } = useAuth();
 
   const { data, refetch, isLoading, isRefetching, isFetching } = useQuery(
     "BlogsByID",
     () => {
       return axios.get(
-        `http:192.168.160.177:8080/postBlog/blogByUser/${userId}`
+        `http:192.168.160.177:8080/postBlog/blogByUser/${userId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
       );
     }
   );

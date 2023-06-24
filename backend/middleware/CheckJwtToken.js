@@ -21,10 +21,3 @@ export const checkToken = (req, res, next) => {
     return res.status(401).json({ message: "No token provided." });
   }
 };
-
-export const sessionToken = (token) => {
-  const session = jwt.verify(token, process.env.SECRET);
-  if (session.exp !== 0) {
-    return true;
-  }
-};

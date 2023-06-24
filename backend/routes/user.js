@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { check } from "express-validator";
 import {
-  createUserByGoogle,
   getUserByID,
   createUser,
   login,
@@ -12,11 +11,6 @@ import { fileUploadProfile } from "../middleware/file-upload.js";
 
 const router = Router();
 
-router.post(
-  "/google/signup",
-  [check("token").not().isEmpty()],
-  createUserByGoogle
-);
 router.post(
   "/signup",
   [

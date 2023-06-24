@@ -23,13 +23,16 @@ const EditBlog = ({ navigation, route }) => {
   const { height, width } = useWindowDimensions();
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [fileName, setFileName] = useState(null);
   const [ext, setExt] = useState(null);
   const [changeImage, setChangeImage] = useState(false);
   const { data } = useQuery("Blog", () => {
     return axios.get(
-      `http:192.168.160.177:8080/postBlog/blog/${route?.params?.id}`
+      `http:192.168.160.177:8080/postBlog/blog/${route?.params?.id}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
     );
   });
 
@@ -40,9 +43,9 @@ const EditBlog = ({ navigation, route }) => {
 
   const { control, handleSubmit, reset, setValue } = useForm();
 
-  const handlePost = async (data) => {
+  const handlePost = (data) => {
     setLoading(true);
-
+    console.log(changeImage);
     const formData = new FormData();
     formData.append("creator", user.id);
     if (changeImage) {
@@ -61,6 +64,7 @@ const EditBlog = ({ navigation, route }) => {
         formData,
         {
           headers: {
+            Authorization: `Bearer ${token}`,
             Accept: "application/json",
             "Content-Type": "multipart/form-data",
           },
@@ -73,9 +77,10 @@ const EditBlog = ({ navigation, route }) => {
           navigation.navigate("Profile");
         }, 1000);
       })
-      .catch((err) => Alert.alert(err.response.data.message))
+      .catch((err) => {
+        Alert.alert("Something went wrong");
+      })
       .finally(() => setLoading(false));
-    reset({ topic: "", discription: "" });
     setImage(null);
   };
 

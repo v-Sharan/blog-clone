@@ -17,11 +17,11 @@ import * as ImagePicker from "expo-image-picker";
 import { useAuth } from "../../../context/auth";
 import axios from "axios";
 
-const LoginScreen = ({ navigation }) => {
+const AddBlog = ({ navigation }) => {
   const { height, width } = useWindowDimensions();
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [fileName, setFileName] = useState(null);
   const [ext, setExt] = useState(null);
 
@@ -44,6 +44,7 @@ const LoginScreen = ({ navigation }) => {
         headers: {
           Accept: "application/json",
           "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
         },
       })
       .then((res) => {
@@ -169,4 +170,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default AddBlog;

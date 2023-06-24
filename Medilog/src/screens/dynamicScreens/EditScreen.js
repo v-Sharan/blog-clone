@@ -26,11 +26,13 @@ const EditScreen = ({ route }) => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
-  const { data, isLoading, isFetching, isRefetching } = useQuery("user", () => {
-    return axios.get(`http:192.168.160.177:8080/user/${route?.params?.id}`);
-  });
+  const { handleUpdate: updateFunction, token } = useAuth();
 
-  const { handleUpdate: updateFunction } = useAuth();
+  const { data, isLoading, isFetching, isRefetching } = useQuery("user", () => {
+    return axios.get(`http:192.168.160.177:8080/user/${route?.params?.id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  });
 
   useEffect(() => {
     setValue("username", data?.data?.user.username);

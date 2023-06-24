@@ -13,12 +13,16 @@ import axios from "axios";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import { Divider, Skeleton } from "@rneui/themed";
+import { useAuth } from "../../../context/auth";
 
 const SingleBlogScreen = ({ route, navigation }) => {
   const { id } = route.params;
   const { width, height } = useWindowDimensions();
+  const { token } = useAuth();
   const { data, isLoading } = useQuery(`${id}`, () => {
-    return axios.get(`http:192.168.160.177:8080/postBlog/blog/${id}`);
+    return axios.get(`http:192.168.160.177:8080/postBlog/blog/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
   });
 
   const date = new Date(data?.data?.createdAt).toDateString();
