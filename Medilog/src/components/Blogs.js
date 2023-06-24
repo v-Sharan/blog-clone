@@ -48,7 +48,9 @@ const Blogs = ({
         <View style={styles.header}>
           <Image
             source={{
-              uri: `http:192.168.160.177:8080/${creator.userPhoto || userImg}`,
+              uri: `https://medilog.onrender.com/${
+                creator.userPhoto || userImg
+              }`,
             }}
             style={styles.profileImage}
           />
@@ -63,7 +65,7 @@ const Blogs = ({
       {image && (
         <Image
           source={{
-            uri: "http:192.168.160.177:8080/" + image,
+            uri: "https://medilog.onrender.com/" + image,
             width: width - 50,
             height: width - 50,
           }}

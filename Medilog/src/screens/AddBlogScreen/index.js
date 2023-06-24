@@ -40,7 +40,7 @@ const AddBlog = ({ navigation }) => {
     formData.append("discription", data.discription);
 
     axios
-      .post("http:192.168.160.177:8080/postBlog/blog", formData, {
+      .post("https://medilog.onrender.com/postBlog/blog", formData, {
         headers: {
           Accept: "application/json",
           "Content-Type": "multipart/form-data",

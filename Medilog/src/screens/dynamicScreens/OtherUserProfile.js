@@ -31,7 +31,7 @@ const OtherUserPRofile = ({ user }) => {
       <Image
         source={{
           uri: user?.userPhoto
-            ? "http:192.168.160.177:8080/" + user?.userPhoto
+            ? "https://medilog.onrender.com/" + user?.userPhoto
             : dummy_img,
         }}
         style={styles.image}
@@ -55,7 +55,7 @@ const ProfileScreen = ({ route }) => {
     "BlogsByID",
     () => {
       return axios.get(
-        `http:192.168.160.177:8080/postBlog/blogByUser/${userId}`,
+        `https://medilog.onrender.com/postBlog/blogByUser/${userId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

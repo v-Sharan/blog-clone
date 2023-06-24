@@ -29,7 +29,7 @@ const LoginScreen = () => {
   const onSignInPressed = async (data) => {
     setLoading(true);
     axios
-      .post("http:192.168.160.177:8080/user/login", data)
+      .post("https://medilog.onrender.com/user/login", data)
       .then((res) => {
         ToastAndroid.show("Login Successfully", ToastAndroid.SHORT);
         setTimeout(() => {

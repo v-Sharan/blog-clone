@@ -20,7 +20,7 @@ const SingleBlogScreen = ({ route, navigation }) => {
   const { width, height } = useWindowDimensions();
   const { token } = useAuth();
   const { data, isLoading } = useQuery(`${id}`, () => {
-    return axios.get(`http:192.168.160.177:8080/postBlog/blog/${id}`, {
+    return axios.get(`https://medilog.onrender.com/postBlog/blog/${id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
   });
@@ -82,7 +82,7 @@ const SingleBlogScreen = ({ route, navigation }) => {
                   <Image
                     style={{ borderRadius: 50 }}
                     source={{
-                      uri: `http:192.168.160.177:8080/${data?.data?.creator.userPhoto}`,
+                      uri: `https://medilog.onrender.com/${data?.data?.creator.userPhoto}`,
                       width: 20,
                       height: 20,
                     }}
@@ -101,7 +101,7 @@ const SingleBlogScreen = ({ route, navigation }) => {
                 <Image
                   resizeMode="contain"
                   source={{
-                    uri: `http:192.168.160.177:8080/${data?.data?.image}`,
+                    uri: `https://medilog.onrender.com/${data?.data?.image}`,
                     width: width - 50,
                     height: width - 70,
                   }}

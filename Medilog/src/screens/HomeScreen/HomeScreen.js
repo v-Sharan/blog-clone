@@ -26,7 +26,7 @@ const HomeScreen = () => {
   const { data, refetch, isLoading, isFetched, isRefetching } = useQuery(
     "blogs",
     () => {
-      return axios.get("http:192.168.160.177:8080/postBlog", {
+      return axios.get("https://medilog.onrender.com/postBlog", {
         headers: { Authorization: `Bearer ${token}` },
       });
     }

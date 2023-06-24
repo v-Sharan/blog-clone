@@ -29,7 +29,7 @@ const EditScreen = ({ route }) => {
   const { handleUpdate: updateFunction, token } = useAuth();
 
   const { data, isLoading, isFetching, isRefetching } = useQuery("user", () => {
-    return axios.get(`http:192.168.160.177:8080/user/${route?.params?.id}`, {
+    return axios.get(`https://medilog.onrender.com/user/${route?.params?.id}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
   });
@@ -108,7 +108,7 @@ const EditScreen = ({ route }) => {
             source={{
               uri: image
                 ? image
-                : "http:192.168.160.177:8080/" + data?.data?.user.userPhoto,
+                : "https://medilog.onrender.com/" + data?.data?.user.userPhoto,
             }}
             resizeMode="contain"
             style={[{ width: "100%", height: "100%" }, styles.imagePreview]}

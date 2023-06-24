@@ -29,7 +29,7 @@ const EditBlog = ({ navigation, route }) => {
   const [changeImage, setChangeImage] = useState(false);
   const { data } = useQuery("Blog", () => {
     return axios.get(
-      `http:192.168.160.177:8080/postBlog/blog/${route?.params?.id}`,
+      `https://medilog.onrender.com/postBlog/blog/${route?.params?.id}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       }

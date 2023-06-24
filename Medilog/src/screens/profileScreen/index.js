@@ -37,14 +37,14 @@ const ProfileScreenHeader = ({ user, isMe = false }) => {
     <View style={styles.container}>
       <Image
         source={{
-          uri: user?.bg ? "http:192.168.160.177:8080/" + user?.bg : bg,
+          uri: user?.bg ? "https://medilog.onrender.com/" + user?.bg : bg,
         }}
         style={styles.bg}
       />
       <Image
         source={{
           uri: user?.userPhoto
-            ? "http:192.168.160.177:8080/" + user?.userPhoto
+            ? "https://medilog.onrender.com/" + user?.userPhoto
             : dummy_img,
         }}
         style={styles.image}
@@ -87,7 +87,7 @@ const ProfileScreen = () => {
     "BlogsByID",
     () => {
       return axios.get(
-        `http:192.168.160.177:8080/postBlog/blogByUser/${user.id}`,
+        `https://medilog.onrender.com/postBlog/blogByUser/${user.id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

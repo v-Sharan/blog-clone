@@ -28,6 +28,7 @@ export const createBlog = async (req, res, next) => {
   }
 
   const splitPath = req.file.path.split("\\");
+  console.log(splitPath);
 
   try {
     createdBlog = new Blog({

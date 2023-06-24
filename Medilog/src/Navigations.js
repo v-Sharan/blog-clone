@@ -37,7 +37,7 @@ function Tabs({ navigation }) {
             >
               <Image
                 source={{
-                  uri: "http:192.168.160.177:8080/" + user?.userPhoto,
+                  uri: "https://medilog.onrender.com/" + user?.userPhoto,
                   width: 40,
                   height: 40,
                 }}
