@@ -65,7 +65,7 @@ const ProfileScreen = ({ route }) => {
 
   useEffect(() => {
     navigation.setOptions({ title: data?.data?.user?.username });
-  }, []);
+  }, [data?.data?.user?.username]);
 
   useFocusEffect(
     useCallback(() => {
